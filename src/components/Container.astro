@@ -1,0 +1,531 @@
+---
+import * as CONTENT from "../pages/content.json"; 
+// Importa un archivo JSON que contiene datos para las secciones como "about", "education", etc.
+
+import AccordionLayout from "../layouts/AccordionLayout.astro"; 
+// Importa un componente de diseño que crea secciones desplegables.
+
+import Card from "./Card.astro"; 
+// Importa un componente de tarjeta reutilizable.
+---
+
+<ul class="shadow-box">
+  <!-- Sección "About" -->
+  <AccordionLayout title={"About"} icon={"mdi:account-badge-outline"}>
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <!-- Imagen de perfil -->
+      <img 
+        src="../public/profile.jpg" 
+        alt="Profile Picture" 
+        class="w-24 h-24 sm:w-32 sm:h-32 rounded-full shadow-md"
+      />
+      <!-- Texto descriptivo -->
+      <div class="text-center sm:text-left">
+        {CONTENT.about} 
+        <!-- Muestra el contenido "about" del archivo JSON -->
+      </div>
+    </div>
+  </AccordionLayout>
+
+  <!-- Sección "Education" -->
+  <AccordionLayout title={"Education"} icon={"carbon:education"}>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {CONTENT.education.map((item) => (
+        <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col border border-gray-200 hover:shadow-xl transition-shadow">
+          <!-- Título del curso -->
+          <h3 class="text-xl font-semibold text-gray-800">{item.course}</h3>
+          <!-- Fechas del curso -->
+          <p class="text-sm text-gray-500">{`${item.from} - ${item.to}`}</p>
+          <!-- Lugar del curso -->
+          <p class="mt-2 text-gray-600">{item.location}</p>
+          {item.source && (
+            <a
+              href={item.source}
+              target="_blank"
+              class="mt-4 text-blue-500 hover:text-blue-700 underline"
+            >
+              {item.source_name || "Learn More"} 
+              <!-- Enlace a más información -->
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </AccordionLayout>
+
+  <!-- Sección "Work" -->
+  <AccordionLayout title={"Work"} icon={"ic:baseline-work-outline"}>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {CONTENT.work.map((item) => (
+        <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col border border-gray-200 hover:shadow-xl transition-shadow">
+          <!-- Imagen representativa del trabajo -->
+          <img 
+            src={item.image} 
+            alt={item.role} 
+            class="w-full h-40 object-cover rounded-lg mb-4"
+          />
+          <!-- Información del trabajo -->
+          <h3 class="text-xl font-semibold text-gray-800">{item.role}</h3>
+          <p class="text-sm text-gray-500">{`${item.from} - ${item.to}`}</p>
+          <p class="mt-2 text-gray-600">{item.location}</p>
+          <p class="mt-4 text-gray-700">{item.skills}</p>
+        </div>
+      ))}
+    </div>
+  </AccordionLayout>
+
+  <!-- Sección "Projects" -->
+  <div class="shadow-box projects-section" data-current-page="0" data-total-pages="100">
+    <AccordionLayout title={"Projects"} icon={"ion:md-build"}>
+      <!-- Botones de tecnología -->
+      <div id="tech-buttons-container" class="flex flex-wrap justify-center gap-4 mb-4">
+        <!-- Contenedor dinámico para botones -->
+      </div>
+      <!-- Barra de búsqueda -->
+      <div class="search-bar flex justify-center mb-4">
+        <input
+          id="project-search-input"
+          type="text"
+          placeholder="Search projects..."
+          class="w-full max-w-xs p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+          style="color:black;"
+        />
+        <button
+          id="project-search-button"
+          class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all duration-300"
+        >
+          Search
+        </button>
+      </div>
+      <!-- Contenedor de proyectos dinámicos -->
+      <div id="dynamic-projects-container">
+        <!-- Los proyectos se cargarán aquí dinámicamente -->
+      </div>
+      <!-- Paginación -->
+      <div class="pagination flex justify-center items-center gap-4 mt-4">
+        <button class="prev-button bg-gray-200 text-black px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          Previous
+        </button>
+        <span class="text-gray-700">Page 1 of 3</span>
+        <button class="next-button bg-gray-200 text-black px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
+          Next
+        </button>
+      </div>
+    </AccordionLayout>
+  </div>
+
+  <!-- Sección "Skills" -->
+  <AccordionLayout title={"Skills"} icon={"mdi:trophy-award"}>
+    {Object.entries(CONTENT.skills).map(([category, skills]) => (
+      <div class="mb-8">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">{category}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {skills.map((skill) => (
+            <div class="bg-white shadow-lg rounded-lg border-2 border-gray-300 p-4 flex flex-col items-center text-center hover:border-black hover:shadow-xl transition-all">
+              <!-- Imagen del skill -->
+              <img
+                src={skill.image}
+                alt={skill.title}
+                class="w-16 h-16 object-contain mb-4"
+              />
+              <!-- Título y descripción del skill -->
+              <h3 class="text-lg font-semibold text-gray-800">{skill.title}</h3>
+              <p class="text-sm text-gray-500">{skill.year}</p>
+              <p class="mt-2 text-gray-600">{skill.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </AccordionLayout>
+
+  <!-- Sección "References" -->
+  <AccordionLayout title={"References"} icon={"ic:round-edit-note"}>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {CONTENT.references.map((item) => (
+        <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col border border-gray-200 hover:shadow-xl transition-shadow">
+          <!-- Imagen de perfil -->
+          <img 
+            src={item.image || "../public/default-profile.jpg"} 
+            alt={item.title} 
+            class="w-24 h-24 sm:w-32 sm:h-32 rounded-full shadow-md mb-4 mx-auto"
+          />
+          <!-- Título y descripción -->
+          <h3 class="text-xl font-semibold text-gray-800 text-center">{item.title}</h3>
+          <p class="text-sm text-gray-500 text-center">{item.date}</p>
+          <p class="mt-2 text-gray-600 text-center">{item.description}</p>
+          {item.source && (
+            <a
+              href={item.source}
+              target="_blank"
+              class="mt-4 text-blue-500 hover:text-blue-700 underline text-center"
+            >
+              {item.source_name || "Read More"}
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </AccordionLayout>
+
+  <!-- Sección "Contact" -->
+  <AccordionLayout title={"Contact"} icon={"ri:contacts-book-fill"}>
+    <!-- Formulario de contacto -->
+    <form id="contact-form" class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <!-- Campo Nombre -->
+      <div class="mb-4">
+        <label for="name" class="block text-gray-700 font-medium">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Your Name"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          style="color: black;"
+        />
+        <p id="name-error" class="text-red-500 text-sm mt-1 hidden">Name must start with a capital letter.</p>
+      </div>
+      <!-- Campo Teléfono -->
+      <div class="mb-4">
+        <label for="phone" class="block text-gray-700 font-medium">Phone</label>
+        <input
+          id="phone"
+          name="phone"
+          type="text"
+          placeholder="Your Phone"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          style="color: black;"
+        />
+        <p id="phone-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid phone number.</p>
+      </div>
+      <!-- Campo Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 font-medium">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Your Email"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          style="color: black;"
+        />
+        <p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email address.</p>
+      </div>
+      <!-- Campo Mensaje -->
+      <div class="mb-4">
+        <label for="message" class="block text-gray-700 font-medium">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          placeholder="Your message (min 20 characters)"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          style="color: black;"
+        ></textarea>
+        <p id="message-error" class="text-red-500 text-sm mt-1 hidden">Message must be at least 20 characters long.</p>
+      </div>
+      <!-- Botón Enviar -->
+      <button
+        id="submit-button"
+        type="submit"
+        class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all duration-300 disabled:bg-gray-300 disabled:cursor-not-allowed"
+        style="color: black;"
+        disabled
+      >
+        Submit
+      </button>
+    </form>
+  </AccordionLayout>
+
+  <!-- Sección "Certifications" -->
+  <AccordionLayout title={"Certifications"} icon={"carbon:certificate"}>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {CONTENT.certificates.map((item) => (
+        <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col border border-gray-200 hover:shadow-xl transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-800">{item.title}</h3>
+          <p class="text-sm text-gray-500">{item.issued}</p>
+          <p class="mt-2 text-gray-600">{item.org}</p>
+          <p class="mt-4 text-gray-700">{item.description}</p>
+          {item.source && (
+            <a
+              href={item.source}
+              target="_blank"
+              class="mt-4 text-blue-500 hover:text-blue-700 underline"
+            >
+              {item.source_name || "View Certificate"}
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </AccordionLayout>
+</ul>
+
+
+<script>
+  // Modo de prueba. Cambiar a `false` cuando se despliegue en producción.
+  const testMode = true;
+
+  // Escucha el evento `load` para ejecutar el código una vez que la página esté completamente cargada.
+  window.addEventListener("load", () => {
+    // Definición del tipo Project para representar los proyectos.
+    type Project = {
+      id: number; // ID único del proyecto.
+      name: string; // Nombre del proyecto.
+      description: string; // Descripción del proyecto.
+      start_date: string; // Fecha de inicio del proyecto.
+      picture: string; // URL de la imagen del proyecto.
+      repository_url?: string; // URL opcional del repositorio del proyecto.
+    };
+
+    // Selección de elementos HTML necesarios para la funcionalidad.
+    const projectsContainer = document.querySelector(".projects-section") as HTMLElement | null;
+    const dynamicProjectsContainer = document.querySelector("#dynamic-projects-container") as HTMLElement | null;
+    const techButtonsContainer = document.querySelector("#tech-buttons-container") as HTMLElement | null;
+    const searchInput = document.querySelector("#project-search-input") as HTMLInputElement | null;
+    const searchButton = document.querySelector("#project-search-button") as HTMLButtonElement | null;
+    const prevButton = document.querySelector(".prev-button") as HTMLButtonElement | null;
+    const nextButton = document.querySelector(".next-button") as HTMLButtonElement | null;
+    const paginationSpan = document.querySelector(".pagination span") as HTMLElement | null;
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+
+    // Validar si todos los elementos necesarios existen en el DOM.
+    if (
+      !projectsContainer ||
+      !dynamicProjectsContainer ||
+      !techButtonsContainer ||
+      !searchInput ||
+      !searchButton ||
+      !prevButton ||
+      !nextButton ||
+      !paginationSpan ||
+      !form
+    ) {
+      console.error("One or more elements not found."); // Mensaje de error si falta algún elemento.
+      return; // Detener ejecución si los elementos requeridos no están disponibles.
+    }
+
+    // Variables de estado para la paginación y los filtros.
+    let currentPage: number = parseInt(projectsContainer.getAttribute("data-current-page") || "0", 10); // Página actual.
+    let totalPages: number = 1; // Total de páginas.
+    const apiUrl: string = "http://localhost:8080/api/v1/projects"; // URL base de la API.
+    let selectedTech: string | null = null; // Tecnología seleccionada para filtrar.
+
+    // Actualizar la información de paginación en el DOM.
+    const updatePaginationInfo = (): void => {
+      paginationSpan.textContent = `Page ${currentPage + 1} of ${totalPages}`; // Mostrar página actual y total.
+      prevButton.disabled = currentPage === 0; // Deshabilitar botón "Anterior" en la primera página.
+      nextButton.disabled = currentPage + 1 >= totalPages; // Deshabilitar botón "Siguiente" en la última página.
+    };
+
+    // Validar si un objeto cumple con el tipo `Project`.
+    const isValidProject = (data: any): data is Project => {
+      return (
+        typeof data.id === "number" &&
+        typeof data.name === "string" &&
+        typeof data.description === "string" &&
+        typeof data.start_date === "string" &&
+        typeof data.picture === "string"
+      );
+    };
+
+    // Función para obtener proyectos desde la API.
+    const fetchProjects = async (
+      page: number = 0, // Página a solicitar.
+      search: string = "", // Término de búsqueda.
+      tech: string | null = null // Tecnología seleccionada.
+    ): Promise<void> => {
+      // Construir la URL de la API según los filtros.
+      const url: string = tech
+        ? `${apiUrl}/tec/${tech}`
+        : search.length >= 3
+        ? `${apiUrl}/${search}`
+        : `${apiUrl}?size=3&page=${page}`;
+
+      try {
+        const response = await fetch(url); // Hacer la solicitud a la API.
+        if (!response.ok) throw new Error(`Failed to fetch projects: ${response.status}`); // Manejar errores HTTP.
+        const data = await response.json(); // Convertir respuesta en JSON.
+
+        console.log("API Response:", data); // Log de la respuesta para debugging.
+
+        let projects: Project[] = [];
+        if (Array.isArray(data.data)) {
+          // Si `data` es un array, mapear los elementos a proyectos.
+          projects = data.data.map((item: any) => mapToProject(item));
+        } else if (data.data && typeof data.data === "object") {
+          // Si `data` es un objeto único, convertirlo a un array.
+          projects = [mapToProject(data.data)];
+        } else if (Array.isArray(data.content)) {
+          // Si la respuesta es paginada, mapear el contenido.
+          projects = data.content.map((item: any) => mapToProject(item));
+          totalPages = data.totalPages || 1; // Actualizar total de páginas.
+        }
+
+        renderProjects(projects, page, totalPages); // Renderizar los proyectos obtenidos.
+      } catch (error) {
+        console.error("Error fetching projects:", error); // Log de error.
+        dynamicProjectsContainer.innerHTML = "<p>Error loading projects</p>"; // Mensaje de error en el DOM.
+      }
+    };
+
+    // Convertir un objeto en un proyecto válido.
+    const mapToProject = (item: any): Project => ({
+      id: item.id || 0, // ID del proyecto.
+      name: item.name || "Unnamed Project", // Nombre o predeterminado.
+      description: item.description || "No Description Available", // Descripción o predeterminada.
+      start_date: item.start_date || "Unknown Start Date", // Fecha de inicio o predeterminada.
+      picture: item.picture || "https://via.placeholder.com/150", // Imagen o predeterminada.
+      repository_url: item.repository_url || null, // URL del repositorio o null.
+    });
+
+    // Renderizar los proyectos en el contenedor.
+    const renderProjects = (projects: Project[], page: number, totalPages: number): void => {
+      currentPage = page; // Actualizar página actual.
+
+      // Crear HTML para cada proyecto.
+      const projectList: string = projects
+        .map((project: Project) => renderProjectCard(project, testMode))
+        .join("");
+
+      dynamicProjectsContainer.innerHTML = projectList; // Insertar proyectos en el contenedor.
+      updatePaginationInfo(); // Actualizar paginación.
+    };
+
+    // Crear la tarjeta HTML para un proyecto.
+    const renderProjectCard = (project: Project, test: boolean): string => {
+      const { id, name, description, start_date, picture, repository_url } = project;
+
+      return `
+        <div class="bg-white shadow-md rounded-lg p-4 flex flex-col sm:flex-row gap-4 hover:shadow-lg transition-shadow border-4 border-black">
+          <img 
+            src="${picture}" 
+            alt="${name}" 
+            class="w-full sm:w-1/4 h-32 object-cover rounded-lg shadow-md"
+          >
+          <div class="flex flex-col flex-grow">
+            <h3 class="text-lg font-semibold text-gray-800">${name}</h3>
+            <p class="text-sm text-gray-500 mb-2">${start_date}</p>
+            <p class="text-gray-600 mb-4">${description}</p>
+            ${
+              repository_url
+                ? `<a href="${repository_url}" target="_blank" class="text-blue-500 hover:text-blue-700 underline">
+                    View Repository
+                  </a>`
+                : `<p class="text-sm text-gray-400 italic">No repository available</p>`
+            }
+          </div>
+        </div>
+      `;
+    };
+
+    // Renderizar botones para tecnologías.
+    const renderTechnologyButtons = (technologies: string[]): void => {
+      const buttons = technologies
+        .map(
+          (tech: string) => `
+          <button 
+            class="tech-button bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all duration-300 m-2"
+            data-tech="${tech}">
+            ${tech}
+          </button>
+        `
+        )
+        .join("");
+
+      techButtonsContainer.innerHTML = buttons; // Insertar botones en el contenedor.
+
+      // Evento para filtrar proyectos por tecnología.
+      techButtonsContainer.addEventListener("click", (e: Event) => {
+        const target = e.target as HTMLElement;
+        if (target?.matches(".tech-button")) {
+          selectedTech = target.getAttribute("data-tech");
+          fetchProjects(0, "", selectedTech); // Cargar proyectos con la tecnología seleccionada.
+        }
+      });
+    };
+
+    // Manejar eliminación de proyectos.
+    const handleDelete = async (projectId: number): Promise<void> => {
+      try {
+        await fetch(`${apiUrl}/${projectId}`, { method: "DELETE" }); // Llamada DELETE a la API.
+        fetchProjects(currentPage, "", selectedTech); // Recargar proyectos.
+      } catch (error) {
+        console.error("Error deleting project:", error); // Log de error.
+      }
+    };
+
+    // Inicializar botones de tecnologías.
+    const technologies = ["JavaScript", "React", "Astro", "CSS", "Tailwind", "Java"];
+    renderTechnologyButtons(technologies);
+
+    // Eventos para buscar, navegar y manejar entrada.
+    searchButton.addEventListener("click", () => {
+      fetchProjects(0, searchInput.value.trim(), selectedTech); // Buscar al hacer clic.
+    });
+    searchInput.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key === "Enter") fetchProjects(0, searchInput.value.trim(), selectedTech); // Buscar al presionar Enter.
+    });
+    prevButton.addEventListener("click", () => {
+      if (currentPage > 0) fetchProjects(currentPage - 1, "", selectedTech); // Página anterior.
+    });
+    nextButton.addEventListener("click", () => {
+      if (currentPage + 1 < totalPages) fetchProjects(currentPage + 1, "", selectedTech); // Página siguiente.
+    });
+
+    // Validar campo del formulario.
+    const validateField = (field: HTMLInputElement | HTMLTextAreaElement): boolean => {
+      const { name, value } = field;
+      let valid = true;
+
+      switch (name) {
+        case "name":
+          valid = /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/.test(value); // Validar nombre.
+          break;
+        case "email":
+          valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); // Validar email.
+          break;
+        case "message":
+          valid = value.length >= 20; // Validar mensaje.
+          break;
+      }
+
+      const errorElement = document.getElementById(`${name}-error`);
+      if (errorElement) {
+        errorElement.textContent = valid
+          ? ""
+          : `Invalid ${name}: ${
+              name === "name"
+                ? "Name must start with an uppercase and be properly formatted."
+                : name === "email"
+                ? "Enter a valid email address."
+                : "Message must be at least 20 characters long."
+            }`;
+        errorElement.classList.toggle("hidden", valid);
+      }
+
+      return valid;
+    };
+
+    // Validar campos en tiempo real.
+    form.addEventListener("input", (e) => {
+      const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+      validateField(target);
+
+      const submitButton = document.getElementById("submit-button") as HTMLButtonElement;
+      submitButton.disabled = !Array.from(form.elements).every((field) =>
+        validateField(field as HTMLInputElement)
+      );
+    });
+
+    // Manejar el envío del formulario.
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert("Form submitted successfully!"); // Mensaje de éxito.
+      form.reset(); // Reiniciar formulario.
+    });
+
+    // Cargar proyectos al inicio.
+    fetchProjects(currentPage);
+  });
+</script>
